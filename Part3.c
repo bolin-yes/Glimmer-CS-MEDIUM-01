@@ -10,8 +10,7 @@ void extract (char *expression,char*FirBig,char *SecBig,char *operator){
      char flag1='\0',flag2='\0';
      int len=strlen(expression),i=0,j=0,mark;//len表示长度，i控制读取字符次数,j控制读取第一个操作数
      while(!isdigit(expression[i])){
-      if (expression[i]=='-')
-        {
+      if (expression[i]=='-'){
             flag1='-';
             i++;
             continue;
@@ -19,25 +18,29 @@ void extract (char *expression,char*FirBig,char *SecBig,char *operator){
         i++;
      }//判断第一个数是否为负数
         
-     for(;i<len;i++){
+     for(;;i++){
         if (!isdigit(expression[i]))
         {
             mark=i;
             break;
         }
      }//找到第一个操作数结束的位置
-    for (i=0;i<mark;i++){
+     for (i=0;i<mark;i++){
         FirBig[j]=expression[i];
         j++;
        }
-       i=mark;//用mark1将i还原
-      for(;i<len;i++){
-        if (!isspace(expression[i]))
-        {
-            *operator=expression[i];
-            break;
+       i=mark;//用mark将i还原
+       while(isspace(expression[i])||expression[i] == '+' || expression[i] == '-' || expression[i] == '*' || expression[i] == '/'||expression[i]=='\0'){
+        if (!isspace(expression[i])) {
+            *operator = expression[i];
         }
+        i++;
       }
+
+       //跳过空格并将将操作符赋给operator
+    while (isspace(expression[i])) {
+        i++;
+    }
     while(!isdigit(expression[i])){
       if (expression[i]=='-')
         {
@@ -55,20 +58,18 @@ void extract (char *expression,char*FirBig,char *SecBig,char *operator){
         SecBig[j] = expression[i];
         j++;
     }//将第二个大数赋值
-
+    
        printf("第一个操作数：%c%s\n",flag1,FirBig);
        
        printf("第二个操作数：%c%s\n",flag2,SecBig);
        
        printf("操作符：%c\n",*operator);
-
 }
-
 //主程序
 int main(){
     char expression[260]={0},Big1[130],Big2[130],operator;
     printf("请输入表达式:");
-    scanf("%s",expression);
+    scanf("%[^\n]", expression);
     extract(expression,Big1,Big2,&operator);
     return 0;
 }

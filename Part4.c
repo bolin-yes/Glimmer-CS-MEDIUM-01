@@ -31,7 +31,7 @@ void jian(char*a, char*b,char*c);//一个类似于减法的专用于除法的函
 int main(){
     char expression[260]={0},FirBig[130]={0},SecBig[130]={0},operator,result[260]={0};
     printf("请输入表达式:");
-    scanf("%s",expression);
+   scanf("%[^\n]", expression);
     extract(expression,FirBig,SecBig,&operator);
    switch (operator)
    {
@@ -88,30 +88,29 @@ void extract (char *expression,char*FirBig,char *SecBig,char *operator){
         i++;
      }//判断第一个数是否为负数
         
-     for(;i<len;i++){
+     for(;;i++){
         if (!isdigit(expression[i]))
         {
             mark=i;
             break;
         }
      }//找到第一个操作数结束的位置
-    for (i=0;i<mark;i++){
+     for (i=0;i<mark;i++){
         FirBig[j]=expression[i];
         j++;
        }
-       i=mark;//用mark1将i还原
-       for(;i<len;i++){
-        if (!isspace(expression[i]))
-        {
-            *operator=expression[i];
-            break;
+       i=mark;//用mark将i还原
+       while(isspace(expression[i])||expression[i] == '+' || expression[i] == '-' || expression[i] == '*' || expression[i] == '/'||expression[i]=='\0'){
+        if (!isspace(expression[i])) {
+            *operator = expression[i];
         }
-       }
+        i++;
+      }
+
        //跳过空格并将将操作符赋给operator
-       i++;
-    while(expression[i]=='+'||expression[i]=='-'|| expression[i] =='*' || expression[i] == '/' || expression[i] == '%'){
-         i++;
-        }//找到下一个大数起始位
+    while (isspace(expression[i])) {
+        i++;
+    }
     while(!isdigit(expression[i])){
       if (expression[i]=='-')
         {
@@ -153,14 +152,14 @@ void extract (char *expression,char*FirBig,char *SecBig,char *operator){
 
 //加法
 char add(char *FirBig, char *SecBig,char*result){
-    char s1[130],s2[130];
+    char s1[130]={0},s2[130]={0};
     strcpy(s1, FirBig);
     strcpy(s2, SecBig);
     char a[130],b[130],c[130]={0};
     /*这里用130防止进行计算时造成溢出
       a，b数组为相加数，c为结果*/
       char flag='\0';
-      int len1=strlen(s1),len2=strlen(s2);
+      int len1=lenth2(s1),len2=lenth2(s2);
       if (s1[0]=='-')
       {   
         len1=len1-1;
@@ -301,7 +300,7 @@ char add(char *FirBig, char *SecBig,char*result){
 //减法
 char minus(char*FirBig,char*SecBig,char*result){
       char flag='\0';
-      char s1[130],s2[130];
+      char s1[130]={0},s2[130]={0};
       strcpy(s1, FirBig);
       strcpy(s2, SecBig);
       //判断结果符号
@@ -325,6 +324,7 @@ char minus(char*FirBig,char*SecBig,char*result){
         for(;i<len-1;i++){
             SecBig[i]=SecBig[i+1];
         }
+        SecBig[len-1]='\0';
         add(FirBig,SecBig,result);
 
     }
